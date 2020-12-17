@@ -9,11 +9,17 @@ RUN set -ex; \
         rsync \
         bzip2 \
         busybox-static \
+        procps \
+        smbclient \
+        supervisor \
     ; \
     rm -rf /var/lib/apt/lists/*; \
     \
     mkdir -p /var/spool/cron/crontabs; \
+    mkdir /var/log/supervisord /var/run/supervisord; \
     echo '*/5 * * * * php -f /var/www/html/cron.php' > /var/spool/cron/crontabs/www-data
+
+COPY supervisord.conf /
 
 # install the PHP extensions we need
 # see https://docs.nextcloud.com/server/stable/admin_manual/installation/source_installation.html
@@ -154,4 +160,7 @@ COPY *.sh upgrade.exclude /
 COPY config/* /usr/src/nextcloud/config/
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["apache2-foreground"]
+
+ENV NEXTCLOUD_UPDATE=1
+
+CMD ["/usr/bin/supervisord", "-c", "/supervisord.conf"]
