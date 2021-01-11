@@ -46,6 +46,7 @@ RUN set -ex; \
         libzip-dev \
         libwebp-dev \
         libgmp-dev \
+        libsmbclient-dev \
     ; \
     \
     debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)"; \
@@ -70,6 +71,7 @@ RUN set -ex; \
     pecl install memcached-3.1.5; \
     pecl install redis-5.3.4; \
     pecl install imagick-3.4.4; \
+    pecl install smbclient; \
     \
     docker-php-ext-enable \
         apcu \
@@ -105,6 +107,8 @@ RUN { \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini; \
     \
     echo 'apc.enable_cli=1' >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini; \
+    \
+    echo "extension=smbclient.so" > /usr/local/etc/php/conf.d/docker-php-ext-smbclient.ini; \
     \
     { \
         echo 'memory_limit=${PHP_MEMORY_LIMIT}'; \
