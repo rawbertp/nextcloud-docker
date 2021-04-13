@@ -9,6 +9,9 @@ RUN set -ex; \
         rsync \
         bzip2 \
         busybox-static \
+        procps \
+        smbclient \
+        libsmbclient-dev \
     ; \
     rm -rf /var/lib/apt/lists/*; \
     \
@@ -101,9 +104,9 @@ RUN { \
     echo 'apc.enable_cli=1' >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini; \
     \
     { \
-        echo 'memory_limit=${PHP_MEMORY_LIMIT}'; \
-        echo 'upload_max_filesize=${PHP_UPLOAD_LIMIT}'; \
-        echo 'post_max_size=${PHP_UPLOAD_LIMIT}'; \
+        echo 'memory_limit=1G'; \
+        echo 'upload_max_filesize=4G'; \
+        echo 'post_max_size=4G'; \
     } > /usr/local/etc/php/conf.d/nextcloud.ini; \
     \
     mkdir /var/www/data; \
